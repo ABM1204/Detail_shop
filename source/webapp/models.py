@@ -1,14 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+
 # Модель пользователя
 class User(AbstractUser):
-    email = models.EmailField(unique=True)  # email
-    name = models.CharField(max_length=255)  # имя пользователя
     phone_number = models.CharField(max_length=20, unique=True)  # номер телефона
 
     def __str__(self):
-        return self.name
+        return self.phone_number
+
 
 # Модель категорий запчастей (например : легковые авто, грузовые авто и т.д.)
 class Category(models.Model):
@@ -18,6 +18,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
 # Модель марок автомобилей
 class CarBrand(models.Model):
     name = models.CharField(max_length=255)  # название марки
@@ -25,6 +26,7 @@ class CarBrand(models.Model):
 
     def __str__(self):
         return self.name
+
 
 # Модель моделей автомобилей
 class CarModel(models.Model):
@@ -35,12 +37,14 @@ class CarModel(models.Model):
     def __str__(self):
         return f"{self.brand.name} {self.name} ({self.year_of_manufacture})"
 
+
 # Модель для стран
 class Country(models.Model):
     name = models.CharField(max_length=255)  # название страны
 
     def __str__(self):
         return self.name
+
 
 # Модель для двигателей
 class Engine(models.Model):
@@ -57,6 +61,7 @@ class Engine(models.Model):
 
     def __str__(self):
         return f"{self.get_engine_type_display()} {self.displacement}L, {self.horsepower} HP"
+
 
 # Модель для хранения марок, моделей и другой информации
 class VehicleInfo(models.Model):
@@ -78,15 +83,4 @@ class VehicleInfo(models.Model):
 
     def __str__(self):
         return f"{self.model.brand.name} {self.model.name} ({self.year_of_manufacture})"
-
-# Модель запчастей
-class Part(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="parts")  # категория запчасти
-    vehicle_info = models.ForeignKey(VehicleInfo, on_delete=models.CASCADE, related_name="parts")  # информация о транспортном средстве
-    name = models.CharField(max_length=255)  # название запчасти
-    description = models.TextField()  # описание запчасти
-    price = models.DecimalField(max_digits=10, decimal_places=2)  # цена
-
-    def __str__(self):
-        return f"{self.name} for {self.vehicle_info.model.brand.name} {self.vehicle_info.model.name}"
 
